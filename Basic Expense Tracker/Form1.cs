@@ -19,16 +19,31 @@ namespace Basic_Expense_Tracker
 
         private void btnAddExpense_Click(object sender, EventArgs e)
         {
-            string description = txtDescription.Text;
-            string amountText = txtAmount.Text;
-            DateTime date = dtpDate.Value;
+          
+                string description = txtDescription.Text.Trim();
+                string amountText = txtAmount.Text.Trim();
+                DateTime date = dtpDate.Value;
 
-            string expenseEntry = date.ToShortDateString()+" - "+description+" - "+amountText;
-            lstExpenses.Items.Add(expenseEntry);
-            txtDescription.Text = "";
-            txtAmount.Text = "";
+                if (string.IsNullOrEmpty(description))
+                {
+                    MessageBox.Show("Description cannot be empty.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (!decimal.TryParse(amountText, out decimal amount) || amount <= 0)
+                {
+                    MessageBox.Show("Amount must be a positive number.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                string expenseEntry = $"{date.ToShortDateString()} - {description} - {amount:C}";
+                lstExpenses.Items.Add(expenseEntry);
+
+                txtDescription.Clear();
+                txtAmount.Clear();
+            }
 
         }
 
-    }
+    
 }
